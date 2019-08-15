@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.wxx.ssm.orclproject.dao.StudentInfoMapper">
+  <resultMap id="BaseResultMap" type="org.wxx.ssm.orclproject.entity.StudentInfo">
+    <id column="STUDENTID" jdbcType="DECIMAL" property="studentid" />
+    <result column="STUDENTNAME" jdbcType="VARCHAR" property="studentname" />
+    <result column="STUDENTSEX" jdbcType="CHAR" property="studentsex" />
+    <result column="STUDENTAGE" jdbcType="DECIMAL" property="studentage" />
+    <result column="STUDENTTEL" jdbcType="DECIMAL" property="studenttel" />
+    <result column="STUDENTADDRESS" jdbcType="VARCHAR" property="studentaddress" />
+    <result column="CID" jdbcType="DECIMAL" property="cid" />
+  </resultMap>
+  <resultMap id="ResultMapWithClassInfo" type="org.wxx.ssm.orclproject.entity.StudentInfo">
+    <id column="STUDENTID" jdbcType="DECIMAL" property="studentid" />
+    <result column="STUDENTNAME" jdbcType="VARCHAR" property="studentname" />
+    <result column="STUDENTSEX" jdbcType="CHAR" property="studentsex" />
+    <result column="STUDENTAGE" jdbcType="DECIMAL" property="studentage" />
+    <result column="STUDENTTEL" jdbcType="DECIMAL" property="studenttel" />
+    <result column="STUDENTADDRESS" jdbcType="VARCHAR" property="studentaddress" />
+    <result column="CID" jdbcType="DECIMAL" property="cid" />
+    <association property="classInfo" javaType="org.wxx.ssm.orclproject.entity.ClassInfo">
+    	<id column="CLASSID" property="classid"/>
+    	<result column="CLASSNAME" property="classname"/>
+    </association>
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    STUDENTID, STUDENTNAME, STUDENTSEX, STUDENTAGE, STUDENTTEL, STUDENTADDRESS, CID
+  </sql>
+  <sql id="Column_ListWithClassInfo">
+    s.STUDENTID, s.STUDENTNAME, s.STUDENTSEX, s.STUDENTAGE, s.STUDENTTEL, s.STUDENTADDRESS, s.CID, c.CLASSID, c.CLASSNAME
+  </sql>
+  <select id="selectByExample" parameterType="org.wxx.ssm.orclproject.entity.StudentInfoExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from STUDENTINFO
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExampleWithClassInfo" parameterType="org.wxx.ssm.orclproject.entity.StudentInfoExample" resultMap="ResultMapWithClassInfo">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Column_ListWithClassInfo" />
+    from STUDENTINFO s left join CLASSINFO c on s.CID = c.CLASSID
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKeyWithClassInfo" parameterType="java.lang.Integer" resultMap="ResultMapWithClassInfo">
+    select 
+    <include refid="Column_ListWithClassInfo" />
+    from STUDENTINFO s left join CLASSINFO c on s.CID = c.CLASSID
+    where STUDENTID = #{studentid,jdbcType=DECIMAL}
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from STUDENTINFO
+    where STUDENTID = #{studentid,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from STUDENTINFO
+    where STUDENTID = #{studentid,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.wxx.ssm.orclproject.entity.StudentInfoExample">
+    delete from STUDENTINFO
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.wxx.ssm.orclproject.entity.StudentInfo">
+    insert into STUDENTINFO (STUDENTID, STUDENTNAME, STUDENTSEX, 
+      STUDENTAGE, STUDENTTEL, STUDENTADDRESS, 
+      CID)
+    values (#{studentid,jdbcType=DECIMAL}, #{studentname,jdbcType=VARCHAR}, #{studentsex,jdbcType=CHAR}, 
+      #{studentage,jdbcType=DECIMAL}, #{studenttel,jdbcType=DECIMAL}, #{studentaddress,jdbcType=VARCHAR}, 
+      #{cid,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="org.wxx.ssm.orclproject.entity.StudentInfo">
+    insert into STUDENTINFO
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="studentid != null">
+        STUDENTID,
+      </if>
+      <if test="studentname != null">
+        STUDENTNAME,
+      </if>
+      <if test="studentsex != null">
+        STUDENTSEX,
+      </if>
+      <if test="studentage != null">
+        STUDENTAGE,
+      </if>
+      <if test="studenttel != null">
+        STUDENTTEL,
+      </if>
+      <if test="studentaddress != null">
+        STUDENTADDRESS,
+      </if>
+      <if test="cid != null">
+        CID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="studentid != null">
+        #{studentid,jdbcType=DECIMAL},
+      </if>
+      <if test="studentname != null">
+        #{studentname,jdbcType=VARCHAR},
+      </if>
+      <if test="studentsex != null">
+        #{studentsex,jdbcType=CHAR},
+      </if>
+      <if test="studentage != null">
+        #{studentage,jdbcType=DECIMAL},
+      </if>
+      <if test="studenttel != null">
+        #{studenttel,jdbcType=DECIMAL},
+      </if>
+      <if test="studentaddress != null">
+        #{studentaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="cid != null">
+        #{cid,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.wxx.ssm.orclproject.entity.StudentInfoExample" resultType="java.lang.Long">
+    select count(*) from STUDENTINFO
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update STUDENTINFO
+    <set>
+      <if test="record.studentid != null">
+        STUDENTID = #{record.studentid,jdbcType=DECIMAL},
+      </if>
+      <if test="record.studentname != null">
+        STUDENTNAME = #{record.studentname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.studentsex != null">
+        STUDENTSEX = #{record.studentsex,jdbcType=CHAR},
+      </if>
+      <if test="record.studentage != null">
+        STUDENTAGE = #{record.studentage,jdbcType=DECIMAL},
+      </if>
+      <if test="record.studenttel != null">
+        STUDENTTEL = #{record.studenttel,jdbcType=DECIMAL},
+      </if>
+      <if test="record.studentaddress != null">
+        STUDENTADDRESS = #{record.studentaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cid != null">
+        CID = #{record.cid,jdbcType=DECIMAL},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update STUDENTINFO
+    set STUDENTID = #{record.studentid,jdbcType=DECIMAL},
+      STUDENTNAME = #{record.studentname,jdbcType=VARCHAR},
+      STUDENTSEX = #{record.studentsex,jdbcType=CHAR},
+      STUDENTAGE = #{record.studentage,jdbcType=DECIMAL},
+      STUDENTTEL = #{record.studenttel,jdbcType=DECIMAL},
+      STUDENTADDRESS = #{record.studentaddress,jdbcType=VARCHAR},
+      CID = #{record.cid,jdbcType=DECIMAL}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.wxx.ssm.orclproject.entity.StudentInfo">
+    update STUDENTINFO
+    <set>
+      <if test="studentname != null">
+        STUDENTNAME = #{studentname,jdbcType=VARCHAR},
+      </if>
+      <if test="studentsex != null">
+        STUDENTSEX = #{studentsex,jdbcType=CHAR},
+      </if>
+      <if test="studentage != null">
+        STUDENTAGE = #{studentage,jdbcType=DECIMAL},
+      </if>
+      <if test="studenttel != null">
+        STUDENTTEL = #{studenttel,jdbcType=DECIMAL},
+      </if>
+      <if test="studentaddress != null">
+        STUDENTADDRESS = #{studentaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="cid != null">
+        CID = #{cid,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where STUDENTID = #{studentid,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.wxx.ssm.orclproject.entity.StudentInfo">
+    update STUDENTINFO
+    set STUDENTNAME = #{studentname,jdbcType=VARCHAR},
+      STUDENTSEX = #{studentsex,jdbcType=CHAR},
+      STUDENTAGE = #{studentage,jdbcType=DECIMAL},
+      STUDENTTEL = #{studenttel,jdbcType=DECIMAL},
+      STUDENTADDRESS = #{studentaddress,jdbcType=VARCHAR},
+      CID = #{cid,jdbcType=DECIMAL}
+    where STUDENTID = #{studentid,jdbcType=DECIMAL}
+  </update>
+</mapper>
